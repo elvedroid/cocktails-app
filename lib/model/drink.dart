@@ -1,6 +1,7 @@
 class Drink {
   final String idDrink;
   final String strDrink;
+  final String strDrinkThumb;
   final String strCategory;
   final String strMeasure1;
   final String strMeasure2;
@@ -17,6 +18,7 @@ class Drink {
   Drink(
       {this.idDrink,
       this.strDrink,
+      this.strDrinkThumb,
       this.strCategory,
       this.strMeasure1,
       this.strMeasure2,
@@ -34,6 +36,7 @@ class Drink {
     return Drink(
         idDrink: json['idDrink'],
         strDrink: json['strDrink'],
+        strDrinkThumb: json['strDrinkThumb'],
         strCategory: json['strCategory'],
         strMeasure1: json['strMeasure1'],
         strMeasure2: json['strMeasure2'],

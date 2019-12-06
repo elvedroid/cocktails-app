@@ -24,7 +24,9 @@ class HomeState extends State<Home> {
               padding: const EdgeInsets.all(10.0),
               child: TextField(
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), hintText: 'Enter a location'),
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter a cocktail name'
+                ),
                 onChanged: (query) => drinkQueryBloc.submitQuery(query),
               ),
             ),

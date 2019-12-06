@@ -1,5 +1,6 @@
 import 'package:cocktail_app/bloc/bloc_provider.dart';
 import 'package:cocktail_app/bloc/drink_categories_bloc.dart';
+import 'package:cocktail_app/feature/drinks_by_category/drinks_by_category.dart';
 import 'package:cocktail_app/model/drink_category.dart';
 import 'package:flutter/material.dart';
 
@@ -73,10 +74,16 @@ Widget _buildCategories(List<DrinkCategory> results) {
         delegate: SliverChildBuilderDelegate(
           (BuildContext context, int index) {
             final category = results[index];
-            return Container(
-              alignment: Alignment.center,
-              color: Colors.orange[(100 * (index % 9)) + 100],
-              child: Text(category.strCategory),
+            return InkWell(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => DrinksByCategory(category)));
+              },
+              child: Container(
+                alignment: Alignment.center,
+                color: Colors.red[(100 * (index % 9)) + 100],
+                child: Text(category.strCategory),
+
+              ),
             );
           },
           childCount: results.length,

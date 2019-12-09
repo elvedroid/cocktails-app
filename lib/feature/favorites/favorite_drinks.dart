@@ -1,39 +1,40 @@
 import 'package:cocktail_app/bloc/bloc_provider.dart';
-import 'package:cocktail_app/bloc/drink_categories_filter_bloc.dart';
+import 'package:cocktail_app/bloc/favorite_drinks_bloc.dart';
 import 'package:cocktail_app/model/drink.dart';
-import 'package:cocktail_app/model/drink_category.dart';
+import 'package:cocktail_app/model/user.dart';
 import 'package:flutter/material.dart';
 
-class DrinksByCategory extends StatefulWidget {
-  final DrinkCategory category;
+class FavoriteDrinks extends StatefulWidget {
+  final User user;
 
-  const DrinksByCategory(this.category, {Key key}) : super(key: key);
+  const FavoriteDrinks({this.user, Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => DrinksByCategoryState();
+  State<StatefulWidget> createState() => FavoriteDrinksState();
 }
 
-class DrinksByCategoryState extends State<DrinksByCategory> {
-  final drinkCategoriesFilterBloc = DrinkCategoriesFilterBloc();
+class FavoriteDrinksState extends State<FavoriteDrinks> {
+  final favoriteDrinksBloc = FavoriteDrinksBloc();
 
   @override
   void initState() {
     super.initState();
-    drinkCategoriesFilterBloc.getFilteredDrinksByCategory(widget.category);
+    favoriteDrinksBloc.getFavoriteDrinks(widget.user);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<DrinkCategoriesFilterBloc>(
-      bloc: drinkCategoriesFilterBloc,
-      child: _buildResults(drinkCategoriesFilterBloc),
+    // TODO: implement build
+    return BlocProvider<FavoriteDrinksBloc>(
+      bloc: favoriteDrinksBloc,
+      child: _buildResults(favoriteDrinksBloc),
     );
   }
 }
 
-Widget _buildResults(DrinkCategoriesFilterBloc bloc) {
+Widget _buildResults(FavoriteDrinksBloc bloc) {
   return StreamBuilder<List<Drink>>(
-    stream: bloc.drinkCategoriesFilterStream,
+    stream: bloc.favoriteDrinksStream,
     builder: (context, snapshot) {
       final results = snapshot.data;
 
@@ -45,12 +46,12 @@ Widget _buildResults(DrinkCategoriesFilterBloc bloc) {
         return Center(child: Text('No Results'));
       }
 
-      return _buildDrinks(results);
+      return _buildFavoriteDrinks(results);
     },
   );
 }
 
-Widget _buildDrinks(List<Drink> results) {
+Widget _buildFavoriteDrinks(List<Drink> results) {
   return GridView.count(
     crossAxisCount: 2,
     children: List.generate(results.length, (index) {
@@ -101,7 +102,7 @@ Widget _buildDrinks(List<Drink> results) {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child:
-                    Icon(Icons.favorite_border, color: Color(0xfff2003c), size: 28),
+                    Icon(Icons.favorite, color: Color(0xfff2003c), size: 28),
               ),
             ),
           ]);

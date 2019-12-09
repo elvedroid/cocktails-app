@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cocktail_app/model/drink.dart';
 import 'package:cocktail_app/model/drink_category.dart';
-import 'package:flutter/foundation.dart';
+import 'package:cocktail_app/model/user.dart';
 import 'package:http/http.dart' as http;
 
 class DrinkRepo {
@@ -43,6 +43,20 @@ class DrinkRepo {
           .toList();
     } else {
       throw Exception("Failed to load drinks from this category!");
+    }
+  }
+
+  Future<List<Drink>> getFavoriteDrinks(User user) async {
+    final response = await http
+        .get("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=" + user.userId);
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      var drinks = data["drinks"] as List;
+      return drinks
+          .map<Drink>((json) => Drink.fromJson(json))
+          .toList();
+    } else {
+      throw Exception("Failed to load drinks from favorites!");
     }
   }
 }

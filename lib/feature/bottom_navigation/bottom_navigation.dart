@@ -1,5 +1,7 @@
 import 'package:cocktail_app/feature/explore_coctails/explore_coctails.dart';
+import 'package:cocktail_app/feature/favorites/favorite_drinks.dart';
 import 'package:cocktail_app/feature/home/home.dart';
+import 'package:cocktail_app/model/user.dart';
 import 'package:flutter/material.dart';
 
 class CocktailsBottomNavigation {
@@ -9,10 +11,7 @@ class CocktailsBottomNavigation {
   static const List<Widget> widgetOptions = <Widget>[
     Home(),
     ExploreCocktails(),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
+    FavoriteDrinks(user: const User(userId: "Cocktail")),
     Text(
       'Index 3: School',
       style: optionStyle,

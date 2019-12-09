@@ -54,9 +54,19 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Center(
-        child: Text(widget.title, style: TextStyle(fontFamily: 'ComicSansMS')),
-      )),
+        title: Center(
+          child:
+              Text(widget.title, style: TextStyle(fontFamily: 'ComicSansMS')),
+        ),
+        actions: <Widget>[
+          new IconButton(
+            icon: new Icon(Icons.add_shopping_cart),
+            tooltip: 'Orders cart',
+            onPressed: _openCart,
+            iconSize: 28,
+          ),
+        ],
+      ),
       bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(
               canvasColor: Colors.black,
@@ -72,5 +82,10 @@ class _MyHomePageState extends State<MyHomePage> {
           )),
       body: CocktailsBottomNavigation.widgetOptions.elementAt(_selectedIndex),
     );
+  }
+
+  Widget _openCart() {
+    // return a widget representing a page
+    return null;
   }
 }

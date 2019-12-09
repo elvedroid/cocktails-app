@@ -50,45 +50,65 @@ Widget _buildResults(DrinkCategoriesBloc bloc) {
 }
 
 Widget _buildCategories(List<DrinkCategory> results) {
-  return CustomScrollView(slivers: <Widget>[
-    SliverToBoxAdapter(
-      child: SizedBox(
-        height: 50,
-        child: Center(
-          child: Text(
-            'Categories',
-            style: TextStyle(fontSize: 20),
+  return Container(
+    color: Color(0xffF5F2E8),
+    child: CustomScrollView(slivers: <Widget>[
+      SliverToBoxAdapter(
+        child: SizedBox(
+          height: 50,
+          child: Center(
+            child: Text(
+              'Categories',
+              style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       ),
-    ),
-    SliverPadding(
-      padding: const EdgeInsets.all(8.0),
-      sliver: SliverGrid(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 150.0,
-          mainAxisSpacing: 4.0,
-          crossAxisSpacing: 8.0,
-          childAspectRatio: 2.0
-        ),
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            final category = results[index];
-            return InkWell(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => DrinksByCategory(category)));
-              },
-              child: Container(
-                alignment: Alignment.center,
-                color: Colors.red[(100 * (index % 9)) + 100],
-                child: Text(category.strCategory),
-
-              ),
-            );
-          },
-          childCount: results.length,
+      SliverPadding(
+        padding: const EdgeInsets.all(8.0),
+        sliver: SliverGrid(
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 150.0,
+              mainAxisSpacing: 4.0,
+              crossAxisSpacing: 8.0,
+              childAspectRatio: 2.0),
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              final category = results[index];
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DrinksByCategory(category)));
+                },
+                child: Container(
+                    alignment: Alignment.center,
+                    color: ((index / 3).floor()) % 2 == 1
+                        ? Color(0xfff56040)
+                        : Color(0xfff2003c),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(category.strCategory,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.bold)),
+                    )),
+              );
+            },
+            childCount: results.length,
+          ),
         ),
       ),
-    ),
-  ]);
+      SliverPadding(
+        padding: const EdgeInsets.all(8.0),
+        sliver: SliverFillRemaining(
+          child: Image.asset('images/cocktail_background.png'),
+        ),
+      )
+    ]),
+  );
 }

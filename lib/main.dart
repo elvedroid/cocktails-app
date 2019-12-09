@@ -54,10 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child:
-              Text(widget.title, style: TextStyle(fontFamily: 'ComicSansMS')),
-        ),
+        title: Text(widget.title, style: TextStyle(fontFamily: 'ComicSansMS')),
         actions: <Widget>[
           new IconButton(
             icon: new Icon(Icons.add_shopping_cart),

@@ -58,10 +58,12 @@ Widget _buildDrinks(List<Drink> results) {
       return Stack(
           alignment: AlignmentDirectional.bottomCenter,
           children: <Widget>[
-            FadeInImage.assetNetwork(
-                placeholderScale: null,
-                placeholder: 'images/cocktail_anim.gif',
-                image: drink.strDrinkThumb),
+            Center(
+              child: FadeInImage.assetNetwork(
+                  placeholderScale: 5,
+                  placeholder: 'images/cocktail_anim.gif',
+                  image: drink.strDrinkThumb),
+            ),
             Positioned(
               height: 50,
               left: 0.0,
@@ -90,8 +92,8 @@ Widget _buildDrinks(List<Drink> results) {
                 color: Color(0x88000000),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child:
-                      Icon(Icons.shopping_cart, color: Color(0xfff56040), size: 28),
+                  child: Icon(Icons.shopping_cart,
+                      color: Color(0xfff56040), size: 28),
                 ),
               ),
             ),
@@ -100,8 +102,8 @@ Widget _buildDrinks(List<Drink> results) {
               right: 36,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child:
-                    Icon(Icons.favorite_border, color: Color(0xfff2003c), size: 28),
+                child: Icon(Icons.favorite_border,
+                    color: Color(0xfff2003c), size: 28),
               ),
             ),
           ]);

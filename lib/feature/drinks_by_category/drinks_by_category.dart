@@ -1,5 +1,6 @@
 import 'package:cocktail_app/bloc/bloc_provider.dart';
 import 'package:cocktail_app/bloc/drink_categories_filter_bloc.dart';
+import 'package:cocktail_app/feature/drink_details/drink_details_view.dart';
 import 'package:cocktail_app/model/drink.dart';
 import 'package:cocktail_app/model/drink_category.dart';
 import 'package:flutter/material.dart';
@@ -45,12 +46,12 @@ Widget _buildResults(DrinkCategoriesFilterBloc bloc) {
         return Center(child: Text('No Results'));
       }
 
-      return _buildDrinks(results);
+      return _buildDrinks(results, context);
     },
   );
 }
 
-Widget _buildDrinks(List<Drink> results) {
+Widget _buildDrinks(List<Drink> results, BuildContext context) {
   return GridView.count(
     crossAxisCount: 2,
     children: List.generate(results.length, (index) {
@@ -58,11 +59,19 @@ Widget _buildDrinks(List<Drink> results) {
       return Stack(
           alignment: AlignmentDirectional.bottomCenter,
           children: <Widget>[
-            Center(
-              child: FadeInImage.assetNetwork(
-                  placeholderScale: 5,
-                  placeholder: 'images/cocktail_anim.gif',
-                  image: drink.strDrinkThumb),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DrinkDetails(drink)));
+              },
+              child: Center(
+                child: FadeInImage.assetNetwork(
+                    placeholderScale: 5,
+                    placeholder: 'images/cocktail_anim.gif',
+                    image: drink.strDrinkThumb),
+              ),
             ),
             Positioned(
               height: 50,

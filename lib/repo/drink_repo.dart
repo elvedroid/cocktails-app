@@ -56,6 +56,20 @@ class DrinkRepo {
           .map<Drink>((json) => Drink.fromJson(json))
           .toList();
     } else {
+      throw Exception("Failed to load drinks from the favorites!");
+    }
+  }
+
+  Future<List<Drink>> getDrinkDetails(Drink drink) async {
+    final response = await http
+        .get("https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=" + drink.idDrink);
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      var drinks = data["drinks"] as List;
+      return drinks
+          .map<Drink>((json) => Drink.fromJson(json))
+          .toList();
+    } else {
       throw Exception("Failed to load drinks from favorites!");
     }
   }

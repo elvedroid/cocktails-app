@@ -1,6 +1,8 @@
 import 'package:cocktail_app/feature/bottom_navigation/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
+import 'feature/splash/splash_screen.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -10,7 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'Cocktail app',
       theme:
           ThemeData(primarySwatch: primaryBlack, textTheme: Typography().white),
-      home: MyHomePage(title: 'Cocktails'),
+      home: MyHomePage(title: 'Cocktails')
     );
   }
 }

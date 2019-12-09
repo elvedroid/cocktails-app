@@ -11,11 +11,11 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+
   final drinkQueryBloc = DrinkQueryBloc();
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return BlocProvider<DrinkQueryBloc>(
         bloc: drinkQueryBloc,
         child: Column(
@@ -25,8 +25,7 @@ class HomeState extends State<Home> {
               child: TextField(
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: 'Enter a cocktail name'
-                ),
+                    hintText: 'Enter a cocktail name'),
                 onChanged: (query) => drinkQueryBloc.submitQuery(query),
               ),
             ),

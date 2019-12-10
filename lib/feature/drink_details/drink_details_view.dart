@@ -148,7 +148,7 @@ _buildTabBarDetail(Drink drink) {
 
 Widget _buildDrinkInfoCard(Drink drink) {
   return Card(
-    margin: const EdgeInsets.fromLTRB(16, 16, 8.0, 16),
+    margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -232,12 +232,7 @@ Widget _buildIngredientsCard(Drink drink) {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.fromLTRB(
-            8,
-            16,
-            8,
-            4,
-          ),
+          padding: const EdgeInsets.fromLTRB(8, 16, 8, 4),
           child: Text(
             "Ingredients",
             style: TextStyle(
@@ -266,12 +261,7 @@ Widget _buildIngredientsCard(Drink drink) {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(
-            8,
-            16,
-            8,
-            4,
-          ),
+          padding: const EdgeInsets.fromLTRB(8, 16, 8, 4),
           child: Text(
             "Instructions",
             style: TextStyle(
@@ -280,17 +270,16 @@ Widget _buildIngredientsCard(Drink drink) {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            8,
-            0,
-            8,
-            16,
-          ),
-          child: Text(
-            instructions,
-            style: TextStyle(color: Colors.black),
-          ),
+        Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+              child: Text(
+                instructions,
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
         ),
       ],
     ),

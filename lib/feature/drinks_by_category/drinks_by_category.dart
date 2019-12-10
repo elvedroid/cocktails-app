@@ -92,29 +92,29 @@ Widget _buildDrinks(List<Drink> results, BuildContext context, onPush) {
                   ),
                 ),
               ),
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  alignment: AlignmentDirectional.centerEnd,
-                  color: Color(0x88000000),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.shopping_cart,
-                        color: Color(0xfff56040), size: 28),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 0,
-                right: 36,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.favorite_border,
-                      color: Color(0xfff2003c), size: 28),
-                ),
-              ),
+//              Positioned(
+//                top: 0,
+//                left: 0,
+//                right: 0,
+//                child: Container(
+//                  alignment: AlignmentDirectional.centerEnd,
+//                  color: Color(0x88000000),
+//                  child: Padding(
+//                    padding: const EdgeInsets.all(8.0),
+//                    child: Icon(Icons.shopping_cart,
+//                        color: Color(0xfff56040), size: 28),
+//                  ),
+//                ),
+//              ),
+//              Positioned(
+//                top: 0,
+//                right: 36,
+//                child: Padding(
+//                  padding: const EdgeInsets.all(8.0),
+//                  child: Icon(Icons.favorite_border,
+//                      color: Color(0xfff2003c), size: 28),
+//                ),
+//              ),
             ]);
       }),
     ),

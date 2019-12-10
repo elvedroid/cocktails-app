@@ -4,14 +4,15 @@ import 'package:cocktail_app/model/drink.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key key}) : super(key: key);
+  final ValueChanged<Drink> onPush;
+
+  const Home({Key key, this.onPush}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => HomeState();
 }
 
 class HomeState extends State<Home> {
-
   final drinkQueryBloc = DrinkQueryBloc();
 
   @override
@@ -23,6 +24,7 @@ class HomeState extends State<Home> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: TextField(
+                style: TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Enter a cocktail name'),
@@ -30,8 +32,8 @@ class HomeState extends State<Home> {
               ),
             ),
             Expanded(
-              child: _buildResults(drinkQueryBloc),
-            )
+              child: _buildResults(drinkQueryBloc, widget.onPush),
+            ),
           ],
         ));
   }
@@ -43,7 +45,7 @@ class HomeState extends State<Home> {
   }
 }
 
-Widget _buildResults(DrinkQueryBloc bloc) {
+Widget _buildResults(DrinkQueryBloc bloc, onPush) {
   return StreamBuilder<List<Drink>>(
     stream: bloc.searchDrinksStream,
     builder: (context, snapshot) {
@@ -58,20 +60,28 @@ Widget _buildResults(DrinkQueryBloc bloc) {
         return Center(child: Text('No Results'));
       }
 
-      return _buildSearchResults(results);
+      return _buildSearchResults(results, onPush);
     },
   );
 }
 
-Widget _buildSearchResults(List<Drink> results) {
+Widget _buildSearchResults(List<Drink> results, onPush) {
   return ListView.separated(
     itemCount: results.length,
     separatorBuilder: (BuildContext context, int index) => Divider(),
     itemBuilder: (context, index) {
       final drink = results[index];
       return ListTile(
-        title: Text(drink.strDrink),
-        onTap: () {},
+        title: Text(
+          drink.strDrink,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        onTap: () {
+          onPush(drink);
+        },
       );
     },
   );

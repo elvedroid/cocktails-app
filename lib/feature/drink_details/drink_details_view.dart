@@ -260,26 +260,26 @@ Widget _buildIngredientsCard(Drink drink) {
                 .toList(),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8, 16, 8, 4),
-          child: Text(
-            "Instructions",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
         Row(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+              padding: const EdgeInsets.fromLTRB(8, 16, 8, 4),
               child: Text(
-                instructions,
-                style: TextStyle(color: Colors.black),
+                "Instructions",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+          child: Text(
+            instructions,
+            style: TextStyle(color: Colors.black),
+          ),
         ),
       ],
     ),

@@ -1,6 +1,7 @@
 import 'package:cocktail_app/feature/drink_details/drink_details_view.dart';
 import 'package:cocktail_app/feature/drinks_by_category/drinks_by_category.dart';
 import 'package:cocktail_app/feature/explore_coctails/explore_coctails.dart';
+import 'package:cocktail_app/feature/home/home.dart';
 import 'package:cocktail_app/model/drink.dart';
 import 'package:cocktail_app/model/drink_category.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,11 @@ import 'bottom_navigation.dart';
 class ExploreRoute {
   static const String root = '/';
   static const String drinks = '/drinks';
+  static const String drink_details = '/drink_details';
+}
+
+class HomeRoute {
+  static const String root = '/';
   static const String drink_details = '/drink_details';
 }
 
@@ -50,15 +56,23 @@ class BottomNavigator extends StatelessWidget {
               _explorePush(context, ExploreRoute.drink_details, drink: drink),
             },
           ),
-      ExploreRoute.drink_details: (context) => DrinkDetails(
-            drink,
-          ),
+      ExploreRoute.drink_details: (context) => DrinkDetails(drink),
     };
   }
 
   @override
   Widget build(BuildContext context) {
-    if (selectedIndex == 1) {
+    if (selectedIndex == 0) {
+      var routeBuilders = _homeRouteBuilders(context);
+      return Navigator(
+          key: navigatorKey,
+          initialRoute: HomeRoute.root,
+          onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+                builder: (context) =>
+                    routeBuilders[routeSettings.name](context));
+          });
+    } else if (selectedIndex == 1) {
       var routeBuilders = _exploreRouteBuilders(context);
       return Navigator(
           key: navigatorKey,
@@ -71,5 +85,26 @@ class BottomNavigator extends StatelessWidget {
     } else {
       return CocktailsBottomNavigation.widgetOptions.elementAt(selectedIndex);
     }
+  }
+
+  Map<String, WidgetBuilder> _homeRouteBuilders(BuildContext context,
+      {Drink drink: null}) {
+    return {
+      HomeRoute.root: (context) => Home(
+          onPush: (Drink drink) => {
+                _homePush(context, HomeRoute.drink_details, drink: drink),
+                changeTitle(drink.strDrink)
+              }),
+      HomeRoute.drink_details: (context) => DrinkDetails(drink),
+    };
+  }
+
+  void _homePush(BuildContext context, String homeRoute, {Drink drink: null}) {
+    var routeBuilders = _homeRouteBuilders(context, drink: drink);
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => routeBuilders[homeRoute](context)));
   }
 }

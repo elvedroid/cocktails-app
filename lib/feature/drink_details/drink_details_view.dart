@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:cocktail_app/bloc/bloc_provider.dart';
 import 'package:cocktail_app/bloc/drink_details_block.dart';
 import 'package:cocktail_app/model/drink.dart';
 import 'package:flutter/material.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class DrinkDetails extends StatefulWidget {
   final Drink drink;
@@ -12,7 +15,8 @@ class DrinkDetails extends StatefulWidget {
   State<StatefulWidget> createState() => DrinkDetailsState();
 }
 
-class DrinkDetailsState extends State<DrinkDetails> {
+class DrinkDetailsState extends State<DrinkDetails>
+    with SingleTickerProviderStateMixin {
   final drinkDetailsBloc = DrinkDetailsBloc();
 
   @override
@@ -56,14 +60,12 @@ Widget _buildDrinkDetails(List<Drink> results) {
     color: Color(0xffF5F2E8),
     child: ListView(children: <Widget>[
       _buildDetailImageCard(drink),
-      _buildDrinkInfoCard(drink),
-      _buildIngredientsCard(drink),
-      _buildDrinkBarsInfo(drink),
+      _buildTabBar(drink),
     ]),
   );
 }
 
-Card _buildDetailImageCard(Drink drink) {
+Widget _buildDetailImageCard(Drink drink) {
   return Card(
     color: Color(0xffF5F2E8),
     child: FadeInImage.assetNetwork(
@@ -75,7 +77,76 @@ Card _buildDetailImageCard(Drink drink) {
   );
 }
 
-Card _buildDrinkInfoCard(Drink drink) {
+Widget _buildTabBar(Drink drink) {
+  return DefaultTabController(
+    length: 2,
+    child: Column(
+      children: <Widget>[
+        _buildTabBars(drink),
+        _buildTabBarView(drink),
+      ],
+    ),
+  );
+}
+
+Widget _buildTabBars(Drink drink) {
+  return Container(
+    color: Colors.white,
+    child: TabBar(
+      tabs: [
+        Tab(
+            icon: Text(
+          "Details",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        )),
+        Tab(
+          icon: Text(
+            "User Reviews",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildTabBarView(Drink drink) {
+  return Container(
+    height: 3000,
+    child: TabBarView(
+      children: [
+        _buildTabBarDetail(drink),
+        Container(
+//          alignment: AlignmentDirectional.center,
+          height: 300,
+          child: Text(
+            'No Reviews',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+_buildTabBarDetail(Drink drink) {
+  return Column(children: <Widget>[
+    _buildDrinkInfoCard(drink),
+    _buildIngredientsCard(drink),
+    _buildDrinkBarsInfo(drink),
+  ]);
+}
+
+Widget _buildDrinkInfoCard(Drink drink) {
   return Card(
     margin: const EdgeInsets.fromLTRB(16, 16, 8.0, 16),
     child: Column(
@@ -150,7 +221,7 @@ Card _buildDrinkInfoCard(Drink drink) {
   );
 }
 
-Card _buildIngredientsCard(Drink drink) {
+Widget _buildIngredientsCard(Drink drink) {
   var ingredients = drink.strIngredients;
   var measurements = drink.strMeasures;
   var instructions = drink.strInstructions;
@@ -226,21 +297,87 @@ Card _buildIngredientsCard(Drink drink) {
   );
 }
 
-Padding _buildDrinkBarsInfo(Drink drink) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
+Widget _buildDrinkBarsInfo(Drink drink) {
+  return Card(
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        _buildDrinkPerBarInfo(drink),
-      ],
+      children: List<int>.generate(6, (i) => i + 1)
+          .map((index) => _buildDrinkPerBarInfo(drink, index))
+          .toList(),
     ),
   );
 }
 
-Card _buildDrinkPerBarInfo(Drink drink) {
-  return Card(
-    child: Text("Bar1"),
+Widget _buildDrinkPerBarInfo(Drink drink, int index) {
+  var random = Random();
+  var ratingAtBar = random.nextInt(4) + random.nextDouble();
+  return Container(
+    decoration: BoxDecoration(
+      border: (index == 6
+          ? null
+          : Border(
+              bottom: BorderSide(
+                color: Color(0xffF5F2E8),
+              ),
+            )),
+    ),
+    child: Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Bar ${index}",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ),
+            Icon(Icons.favorite_border),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.add_shopping_cart),
+            ),
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+              child: Text(
+                "Drink Rating:",
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 4, 8),
+              child: SmoothStarRating(
+                rating: ratingAtBar,
+                borderColor: Colors.black,
+                color: Colors.yellow,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 8, 8),
+              child: Text(
+                ratingAtBar.toStringAsFixed(1),
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            FlatButton(
+              child: Text("Leave a comment"),
+              onPressed: () => {},
+            ),
+          ],
+        ),
+      ],
+    ),
   );
 }

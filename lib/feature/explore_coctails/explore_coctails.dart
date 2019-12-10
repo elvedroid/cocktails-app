@@ -2,10 +2,13 @@ import 'package:cocktail_app/bloc/bloc_provider.dart';
 import 'package:cocktail_app/bloc/drink_categories_bloc.dart';
 import 'package:cocktail_app/feature/drinks_by_category/drinks_by_category.dart';
 import 'package:cocktail_app/model/drink_category.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ExploreCocktails extends StatefulWidget {
-  const ExploreCocktails({Key key}) : super(key: key);
+  final ValueChanged<DrinkCategory> onPush;
+
+  const ExploreCocktails({Key key, this.onPush}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => ExploreCocktailsState();

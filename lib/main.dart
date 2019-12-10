@@ -1,7 +1,6 @@
 import 'package:cocktail_app/feature/bottom_navigation/bottom_navigation.dart';
+import 'package:cocktail_app/feature/bottom_navigation/bottom_navigator.dart';
 import 'package:flutter/material.dart';
-
-import 'feature/splash/splash_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,11 +8,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Cocktail app',
-      theme:
-          ThemeData(primarySwatch: primaryBlack, textTheme: Typography().white),
-      home: MyHomePage(title: 'Cocktails')
-    );
+        title: 'Cocktail app',
+        theme: ThemeData(
+            primarySwatch: primaryBlack, textTheme: Typography().white),
+        home: MyHomePage(title: 'Cocktails'));
   }
 }
 
@@ -45,6 +43,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  Map<int, GlobalKey<NavigatorState>> navigatorKeys = {
+    0: GlobalKey<NavigatorState>(),
+    1: GlobalKey<NavigatorState>(),
+    2: GlobalKey<NavigatorState>(),
+  };
 
   void _onItemTapped(int index) {
     setState(() {
@@ -54,32 +57,51 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title, style: TextStyle(fontFamily: 'ComicSansMS')),
-        actions: <Widget>[
-          new IconButton(
-            icon: new Icon(Icons.add_shopping_cart),
-            tooltip: 'Orders cart',
-            onPressed: _openCart,
-            iconSize: 28,
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: () async =>
+          !await navigatorKeys[_selectedIndex].currentState.maybePop(),
+      child: Scaffold(
+        appBar: AppBar(
+          title:
+              Text(widget.title, style: TextStyle(fontFamily: 'ComicSansMS')),
+          actions: <Widget>[
+            new IconButton(
+              icon: new Icon(Icons.add_shopping_cart),
+              tooltip: 'Orders cart',
+              onPressed: _openCart,
+              iconSize: 28,
+            ),
+          ],
+        ),
+        bottomNavigationBar: Theme(
+            data: Theme.of(context).copyWith(
+                canvasColor: Colors.black,
+                textTheme: Theme.of(context)
+                    .textTheme
+                    .copyWith(caption: TextStyle(color: Colors.black54))),
+            child: BottomNavigationBar(
+              items: CocktailsBottomNavigation.getBottomNavigationBarItems(),
+              currentIndex: _selectedIndex,
+              selectedItemColor: Color(0xfff2003c),
+              unselectedItemColor: Colors.white,
+              onTap: _onItemTapped,
+            )),
+        body: Stack(children: <Widget>[
+          _buildOffstageNavigator(0),
+          _buildOffstageNavigator(1),
+          _buildOffstageNavigator(2),
+        ]),
       ),
-      bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-              canvasColor: Colors.black,
-              textTheme: Theme.of(context)
-                  .textTheme
-                  .copyWith(caption: TextStyle(color: Colors.black54))),
-          child: BottomNavigationBar(
-            items: CocktailsBottomNavigation.getBottomNavigationBarItems(),
-            currentIndex: _selectedIndex,
-            selectedItemColor: Color(0xfff2003c),
-            unselectedItemColor: Colors.white,
-            onTap: _onItemTapped,
-          )),
-      body: CocktailsBottomNavigation.widgetOptions.elementAt(_selectedIndex),
+    );
+  }
+
+  Widget _buildOffstageNavigator(int selectedIndex) {
+    return Offstage(
+      offstage: _selectedIndex != selectedIndex,
+      child: BottomNavigator(
+        navigatorKey: navigatorKeys[selectedIndex],
+        selectedIndex: selectedIndex,
+      ),
     );
   }
 

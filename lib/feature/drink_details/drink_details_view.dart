@@ -110,7 +110,28 @@ Widget _buildDrinkDetails(List<Drink> results) {
                 fontSize: 18,
               )),
         ),
-      )
+      ),
+      Card(
+        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0),
+              child: Text('Ingredients',
+                  style: TextStyle(
+                    decoration: TextDecoration.none,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  )),
+            ),
+          ),
+          ListView.builder(
+              itemCount: 0,
+              itemBuilder: (context, index) => Text(
+                  results[0].strIngredients[index],
+                  style: TextStyle(color: Colors.black)))
+        ]),
+      ),
     ]),
   );
 }

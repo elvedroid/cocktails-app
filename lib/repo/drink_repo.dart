@@ -62,15 +62,13 @@ class DrinkRepo {
 
   Future<List<Drink>> getDrinkDetails(Drink drink) async {
     final response = await http
-        .get("https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=" + drink.idDrink);
+        .get("http://830468dd.ngrok.io/cocktails-app/cocktails/" + drink.idDrink + '/details');
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-      var drinks = data["drinks"] as List;
-      return drinks
-          .map<Drink>((json) => Drink.fromJson(json))
-          .toList();
+      return [data]
+          .map<Drink>((json) => Drink.fromJson(json)).toList();
     } else {
-      throw Exception("Failed to load drinks from favorites!");
+      throw Exception("Failed to load drinks details!");
     }
   }
 }

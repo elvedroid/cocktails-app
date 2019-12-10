@@ -19,12 +19,14 @@ class BottomNavigator extends StatelessWidget {
 
   final int selectedIndex;
 
-  BottomNavigator({this.navigatorKey, this.selectedIndex});
+  final ValueChanged<String> changeTitle;
+
+  BottomNavigator({this.navigatorKey, this.selectedIndex, this.changeTitle});
 
   void _explorePush(BuildContext context, String exploreRoute,
       {DrinkCategory drinkCategory: null, Drink drink: null}) {
-    var routeBuilders =
-        _exploreRouteBuilders(context, drinkCategory: drinkCategory, drink: drink);
+    var routeBuilders = _exploreRouteBuilders(context,
+        drinkCategory: drinkCategory, drink: drink);
 
     Navigator.push(
         context,
@@ -36,13 +38,17 @@ class BottomNavigator extends StatelessWidget {
       {DrinkCategory drinkCategory: null, Drink drink: null}) {
     return {
       ExploreRoute.root: (context) => ExploreCocktails(
-            onPush: (category) => _explorePush(context, ExploreRoute.drinks,
-                drinkCategory: drinkCategory),
-          ),
+          onPush: (DrinkCategory category) => {
+                _explorePush(context, ExploreRoute.drinks,
+                    drinkCategory: category),
+                changeTitle(category.strCategory)
+              }),
       ExploreRoute.drinks: (context) => DrinksByCategory(
             drinkCategory,
-            onPush: (drink) =>
-                _explorePush(context, ExploreRoute.drink_details, drink: drink),
+            onPush: (Drink drink) => {
+              changeTitle(drink.strDrink),
+              _explorePush(context, ExploreRoute.drink_details, drink: drink),
+            },
           ),
       ExploreRoute.drink_details: (context) => DrinkDetails(
             drink,

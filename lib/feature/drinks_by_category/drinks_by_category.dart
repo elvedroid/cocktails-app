@@ -1,6 +1,5 @@
 import 'package:cocktail_app/bloc/bloc_provider.dart';
 import 'package:cocktail_app/bloc/drink_categories_filter_bloc.dart';
-import 'package:cocktail_app/feature/drink_details/drink_details_view.dart';
 import 'package:cocktail_app/model/drink.dart';
 import 'package:cocktail_app/model/drink_category.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,8 @@ class DrinksByCategory extends StatefulWidget {
   final ValueChanged<Drink> onPush;
   final DrinkCategory category;
 
-  const DrinksByCategory(this.category, {Key key, this.onPush}) : super(key: key);
+  const DrinksByCategory(this.category, {Key key, this.onPush})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => DrinksByCategoryState();
@@ -28,12 +28,12 @@ class DrinksByCategoryState extends State<DrinksByCategory> {
   Widget build(BuildContext context) {
     return BlocProvider<DrinkCategoriesFilterBloc>(
       bloc: drinkCategoriesFilterBloc,
-      child: _buildResults(drinkCategoriesFilterBloc),
+      child: _buildResults(drinkCategoriesFilterBloc, widget.onPush),
     );
   }
 }
 
-Widget _buildResults(DrinkCategoriesFilterBloc bloc) {
+Widget _buildResults(DrinkCategoriesFilterBloc bloc, onPush) {
   return StreamBuilder<List<Drink>>(
     stream: bloc.drinkCategoriesFilterStream,
     builder: (context, snapshot) {
@@ -47,12 +47,12 @@ Widget _buildResults(DrinkCategoriesFilterBloc bloc) {
         return Center(child: Text('No Results'));
       }
 
-      return _buildDrinks(results, context);
+      return _buildDrinks(results, context, onPush);
     },
   );
 }
 
-Widget _buildDrinks(List<Drink> results, BuildContext context) {
+Widget _buildDrinks(List<Drink> results, BuildContext context, onPush) {
   return Container(
     color: Colors.black87,
     child: GridView.count(
@@ -64,10 +64,7 @@ Widget _buildDrinks(List<Drink> results, BuildContext context) {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DrinkDetails(drink)));
+                  onPush(drink);
                 },
                 child: Center(
                   child: FadeInImage.assetNetwork(

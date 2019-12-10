@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cocktail_app/feature/bottom_navigation/bottom_navigation.dart';
 import 'package:cocktail_app/feature/bottom_navigation/bottom_navigator.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
         title: 'Cocktail app',
         theme: ThemeData(
             primarySwatch: primaryBlack, textTheme: Typography().white),
-        home: MyHomePage(title: 'Cocktails'));
+        home: MyHomePage());
   }
 }
 
@@ -33,9 +35,7 @@ const MaterialColor primaryBlack = MaterialColor(
 const int _blackPrimaryValue = 0xFF000000;
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyHomePage({Key key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -43,6 +43,24 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  List<Queue> _titles;
+
+  String _appBarTitle = "Home";
+
+  @override
+  void initState() {
+    super.initState();
+    Queue homeStack = Queue();
+    homeStack.addLast("Home");
+    Queue explreStack = Queue();
+    explreStack.addLast("Explore");
+    Queue favStack = Queue();
+    favStack.addLast("Favorite");
+    Queue moreStack = Queue();
+    moreStack.addLast("More");
+    _titles = [homeStack, explreStack, favStack, moreStack];
+  }
+
   Map<int, GlobalKey<NavigatorState>> navigatorKeys = {
     0: GlobalKey<NavigatorState>(),
     1: GlobalKey<NavigatorState>(),
@@ -52,18 +70,51 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      _appBarTitle = _titles[index].last;
+    });
+  }
+
+  void _onChangedTitle(int index, String title) {
+    setState(() {
+      _titles[index].addLast(title);
+      _appBarTitle = _titles[index].last;
+    });
+  }
+
+  void _removeTitle() {
+    setState(() {
+      _titles[_selectedIndex].removeLast();
+      _appBarTitle = _titles[_selectedIndex].last;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async =>
-          !await navigatorKeys[_selectedIndex].currentState.maybePop(),
+      onWillPop: () async {
+        bool popped =
+            await navigatorKeys[_selectedIndex].currentState.maybePop();
+        if (popped) {
+          _removeTitle();
+        }
+        return !popped;
+      },
       child: Scaffold(
         appBar: AppBar(
           title:
-              Text(widget.title, style: TextStyle(fontFamily: 'ComicSansMS')),
+              Text(_appBarTitle, style: TextStyle(fontFamily: 'ComicSansMS')),
+          leading: _titles[_selectedIndex].length > 1
+              ? IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () async {
+                    bool popped = await navigatorKeys[_selectedIndex]
+                        .currentState
+                        .maybePop();
+                    if (popped) {
+                      _removeTitle();
+                    }
+                  })
+              : null,
           actions: <Widget>[
             new IconButton(
               icon: new Icon(Icons.add_shopping_cart),
@@ -101,6 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: BottomNavigator(
         navigatorKey: navigatorKeys[selectedIndex],
         selectedIndex: selectedIndex,
+        changeTitle: (title) => _onChangedTitle(selectedIndex, title),
       ),
     );
   }

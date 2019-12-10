@@ -1,6 +1,5 @@
 import 'package:cocktail_app/bloc/bloc_provider.dart';
 import 'package:cocktail_app/bloc/drink_categories_bloc.dart';
-import 'package:cocktail_app/feature/drinks_by_category/drinks_by_category.dart';
 import 'package:cocktail_app/model/drink_category.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -28,12 +27,12 @@ class ExploreCocktailsState extends State<ExploreCocktails> {
     // TODO: implement build
     return BlocProvider<DrinkCategoriesBloc>(
       bloc: drinkCategoriesBloc,
-      child: _buildResults(drinkCategoriesBloc),
+      child: _buildResults(drinkCategoriesBloc, widget.onPush),
     );
   }
 }
 
-Widget _buildResults(DrinkCategoriesBloc bloc) {
+Widget _buildResults(DrinkCategoriesBloc bloc, onPush) {
   return StreamBuilder<List<DrinkCategory>>(
     stream: bloc.drinkCategoriesStream,
     builder: (context, snapshot) {
@@ -47,12 +46,12 @@ Widget _buildResults(DrinkCategoriesBloc bloc) {
         return Center(child: Text('No Results'));
       }
 
-      return _buildCategories(results);
+      return _buildCategories(results, onPush);
     },
   );
 }
 
-Widget _buildCategories(List<DrinkCategory> results) {
+Widget _buildCategories(List<DrinkCategory> results, onPush) {
   return Container(
     color: Color(0xffF5F2E8),
     child: CustomScrollView(slivers: <Widget>[
@@ -83,10 +82,7 @@ Widget _buildCategories(List<DrinkCategory> results) {
               final category = results[index];
               return InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DrinksByCategory(category)));
+                  onPush(category);
                 },
                 child: Container(
                     alignment: Alignment.center,

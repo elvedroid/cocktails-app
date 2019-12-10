@@ -60,9 +60,24 @@ class DrinkRepo {
     }
   }
 
+
+  Future<List<Drink>> getRecommendedDrinks(User user) async {
+    final response = await http
+        .get("http://14fe63c7.ngrok.io/cocktails-app/cocktails/1/recommended"); // + user.userId
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      var drinks = data["drinks"] as List;
+      return drinks
+          .map<Drink>((json) => Drink.fromJson(json))
+          .toList();
+    } else {
+      throw Exception("Failed to load drinks from the favorites!");
+    }
+  }
+
   Future<List<Drink>> getDrinkDetails(Drink drink) async {
     final response = await http
-        .get("http://830468dd.ngrok.io/cocktails-app/cocktails/" + drink.idDrink + '/details');
+        .get("http://14fe63c7.ngrok.io/cocktails-app/cocktails/" + drink.idDrink + '/details');
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       return [data]

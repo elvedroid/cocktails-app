@@ -9,7 +9,7 @@ class CocktailsBottomNavigation {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static const List<Widget> widgetOptions = <Widget>[
-    Home(),
+    FavoriteDrinks(user: const User(userId: "Cocktail")),
     ExploreCocktails(),
     FavoriteDrinks(user: const User(userId: "Cocktail")),
     Text(

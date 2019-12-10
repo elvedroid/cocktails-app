@@ -43,6 +43,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  int _oldSelectedIndex = 0;
   List<Queue> _titles;
 
   String _appBarTitle = "Home";
@@ -58,17 +59,34 @@ class _MyHomePageState extends State<MyHomePage> {
     favStack.addLast("Favorite");
     Queue moreStack = Queue();
     moreStack.addLast("More");
-    _titles = [homeStack, explreStack, favStack, moreStack];
+    Queue searchStack = Queue();
+    searchStack.addLast("Search");
+    Queue cartStack = Queue();
+    cartStack.addLast("Cart");
+    _titles = [
+      homeStack,
+      explreStack,
+      favStack,
+      moreStack,
+      searchStack,
+      cartStack
+    ];
   }
 
   Map<int, GlobalKey<NavigatorState>> navigatorKeys = {
     0: GlobalKey<NavigatorState>(),
     1: GlobalKey<NavigatorState>(),
     2: GlobalKey<NavigatorState>(),
+    3: GlobalKey<NavigatorState>(),
+    4: GlobalKey<NavigatorState>(),
+    5: GlobalKey<NavigatorState>(),
   };
 
   void _onItemTapped(int index) {
     setState(() {
+      if (index > 3) {
+        _oldSelectedIndex = _selectedIndex;
+      }
       _selectedIndex = index;
       _appBarTitle = _titles[index].last;
     });
@@ -92,6 +110,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        if (_selectedIndex > 3) {
+          _onItemTapped(_oldSelectedIndex);
+          return false;
+        }
         bool popped =
             await navigatorKeys[_selectedIndex].currentState.maybePop();
         if (popped) {
@@ -103,10 +125,14 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title:
               Text(_appBarTitle, style: TextStyle(fontFamily: 'ComicSansMS')),
-          leading: _titles[_selectedIndex].length > 1
+          leading: (_titles[_selectedIndex].length > 1 || _selectedIndex > 3)
               ? IconButton(
                   icon: Icon(Icons.arrow_back),
                   onPressed: () async {
+                    if (_selectedIndex > 3) {
+                      _onItemTapped(_oldSelectedIndex);
+                      return;
+                    }
                     bool popped = await navigatorKeys[_selectedIndex]
                         .currentState
                         .maybePop();
@@ -116,6 +142,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   })
               : null,
           actions: <Widget>[
+            new IconButton(
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              tooltip: 'Search drinks & bars',
+              iconSize: 28,
+              onPressed: () => _startSearch(),
+            ),
             new IconButton(
               icon: new Icon(Icons.add_shopping_cart),
               tooltip: 'Orders cart',
@@ -132,7 +167,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     .copyWith(caption: TextStyle(color: Colors.black54))),
             child: BottomNavigationBar(
               items: CocktailsBottomNavigation.getBottomNavigationBarItems(),
-              currentIndex: _selectedIndex,
+              currentIndex:
+                  _selectedIndex > 3 ? _oldSelectedIndex : _selectedIndex,
               selectedItemColor: Color(0xfff2003c),
               unselectedItemColor: Colors.white,
               onTap: _onItemTapped,
@@ -141,6 +177,9 @@ class _MyHomePageState extends State<MyHomePage> {
           _buildOffstageNavigator(0),
           _buildOffstageNavigator(1),
           _buildOffstageNavigator(2),
+          _buildOffstageNavigator(3),
+          _buildOffstageNavigator(4), // search
+          _buildOffstageNavigator(5), // cart
         ]),
       ),
     );
@@ -160,5 +199,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _openCart() {
     // return a widget representing a page
     return null;
+  }
+
+  _startSearch() {
+    _onItemTapped(4);
   }
 }
